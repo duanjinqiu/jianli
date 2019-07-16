@@ -1,20 +1,20 @@
 /**
 * @disabled 传入组件的属性disabled，是否禁用该组件，默认false
-* @move 父组件可监听的移动事件，穿的就是x轴移动的距离
-* @success 返回组件验证结果,true
+* @move 父组件可监听的移动事件，传递给父组件的是一个数字，x轴移动的距离
+* @success 验证通过回调方法，返回组件验证结果，通过返回true，不通过没有任何返回
 *
 *使用示例
-*<SliderVerification :disabled="isDisabled" @move="move($event)" @success="successCallback"></SliderVerification>
+*<SliderVerification :disabled="isDisabled" @move="move($event)"  @success="successCallback"></SliderVerification>
 */
 <template>
     <div>
-        <div id="box" ref="box" :class=" disabled ? 'disabled' : '' ">
+        <div class="slider-box" ref="box" :class=" disabled ? 'disabled' : '' ">
             <div class="swiper-btn" ref="btn">
-                <img class="img" draggable="false" src="@/assets/next-blue.png" alt="">
-                <img class="img" draggable="false" src="@/assets/next-blue.png" alt="">
+                <img class="slider-img" draggable="false" src="@/assets/icon/next-blue.png" alt="">
+                <img class="slider-img" draggable="false" src="@/assets/icon/next-blue.png" alt="">
             </div>
-            <p class="text" ref="text">拖动滑块验证</p>
-            <div class="bg" ref="bg"></div>
+            <p class="slider-text" ref="text">拖动滑块验证</p>
+            <div class="slider-bg" ref="bg"></div>
         </div>
     </div>
 </template>
@@ -28,17 +28,9 @@
                 default: false
             }
         },
-        data() {
-            return {}
-        },
         mounted() {
             let that = this;
             let flag = false; //处理验证是否通过  默认是不通过
-            // let box = document.getElementById('box');//大盒子
-            // let btn = document.getElementsByClassName('swiper-btn')[0];//滑块
-            // let text = document.getElementsByClassName('text')[0];//文字
-            // let bg = document.getElementsByClassName('bg')[0];//背景
-
             let box = this.$refs.box;//大盒子
             let btn = this.$refs.btn;//滑块
             let text = this.$refs.text;//文字
@@ -92,7 +84,7 @@
                 if (moveX > 0) {
                     btn.style.left = moveX + 'px';//滑块与左边的距离
                     bg.style.width = moveX + 'px'; //背景的宽度就是滑块距离左边的位置
-                    that.$emit('move', {x: moveX}); //触发父组件监听的move事件
+                    that.$emit('move', moveX); //触发父组件监听的move事件
 
                     if (moveX >= canBeMoveX) {
                         text.innerText = '验证成功';
@@ -125,20 +117,19 @@
                     document.removeEventListener('mousemove', move, false);//清除事件
                 }
             }
-        },
-
+        }
     }
 </script>
 
 <style scoped>
-    #box {
+    .slider-box {
         width: 100%;
         height: 40px;
         position: relative;
         background: #ccc;
     }
 
-    #box .swiper-btn {
+    .slider-box .swiper-btn {
         width: 50px;
         height: 40px;
         padding: 10px;
@@ -154,11 +145,11 @@
         user-select: none;
     }
 
-    .swiper-btn .img {
+    .swiper-btn .slider-img {
         height: 100%;
     }
 
-    #box .bg {
+    .slider-box .slider-bg {
         width: 0;
         height: 100%;
         background: #7ac23c;
@@ -168,7 +159,7 @@
         z-index: 1;
     }
 
-    #box .text {
+    .slider-box .slider-text {
         width: 100%;
         height: 100%;
         line-height: 38px;
